@@ -1,0 +1,39 @@
+[
+  {
+    "op": "core/column-removal",
+    "description": "Delete Column [Column 1]",
+    "columnName": "Column 1",
+    "ignoreError": false
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Remove Characters After /\\.\\d+/ [Mobile subscriptions] (#### Rows)",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "columnName": "Mobile subscriptions",
+    "expression": "grel:trim(partition(value, /\\.\\d+/)[0] + partition(value, /\\.\\d+/)[1])",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/row-removal",
+    "description": "Delete Row(s) Where Cell Contains /N\\/A/ [% of population of 3g/4G users] (#### Rows)",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": [
+        {
+          "mode": "regex",
+          "caseSensitive": true,
+          "query": "N\\/A",
+          "name": "% of population of 3g/4G users",
+          "type": "text",
+          "columnName": "% of population of 3g/4G users"
+        }
+      ]
+    },
+    "invert": false
+  }
+]
