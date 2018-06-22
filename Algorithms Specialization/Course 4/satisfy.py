@@ -4,12 +4,12 @@ with open('2sat2.txt', 'r') as file:
     f = file.readlines()
 
 f.pop(0)
-propdict = defaultdict(list)
+propdict = defaultdict(lambda: defaultdict(bool))
 proplist = list()
 
 for line in f:
 	a, b = tuple(map(int, line.split()))
-	propdict[a].append(b)
+	propdict[a][b] = True
 	proplist.append((a, b))
 
 # print(propdict)
@@ -25,48 +25,47 @@ while True:
 	if -key in propdict:
 		found = False
 		# print(len(propdict[key]), len(propdict[-key]))
-		for i in range(len(propdict[key])):
-			for j in range(len(propdict[-key])):
-				if propdict[key][i] == -propdict[-key][j]:
-					found = True
-					propdict[key].pop(i)
-					propdict[-key].pop(j)
-					break
-			if found:
+		for i in propdict[key]:
+			# for j in range(len(propdict[-key])):
+			if -i in propdict[-key]:
+				found = True
+				del propdict[key][i]
+				del propdict[-key][-i]
 				break
 
 		if not found:
-			newkey = propdict[key].pop()
-			newval = propdict[-key].pop()
-			propdict[newkey].append(newval)
+			newkey = next(iter(propdict[key]))
+			newval = next(iter(propdict[-key]))
+			propdict[newkey][newval] = True
+			del propdict[key][newkey]
+			del propdict[-key][newval]
 
-		if len(propdict[key]) == 0:
+		if len(propdict[key].keys()) == 0:
 			del propdict[key]
-		if len(propdict[-key]) == 0:
+		if len(propdict[-key].keys()) == 0:
 			del propdict[-key]
 		i = 0
 		# print('i reset', i)
 	else:
 		found = spfound = False
-		for i in range(len(propdict[key])):
-			if -propdict[key][i] in propdict:
+		for i in propdict[key]:
+			if -i in propdict:
 				found = True
-				otherkey = -propdict[key][i]
-				for j in range(len(propdict[otherkey])):
-					if key == -propdict[otherkey][j]:
-						spfound = True
-						propdict[otherkey].pop(j)
-						propdict[key].pop(i)
-						if len(propdict[key]) == 0:
-							del propdict[key]
-						if len(propdict[otherkey]) == 0:
-							del propdict[otherkey]
-						break
+				otherkey = -i
+				if -key in propdict[otherkey]:
+					spfound = True
+					del propdict[otherkey][-key]
+					del propdict[key][i]
+					if len(propdict[key]) == 0:
+						del propdict[key]
+					if len(propdict[otherkey]) == 0:
+						del propdict[otherkey]
 
-				if not spfound:			
-					propdict[key].pop(i)
-					transfer = propdict[otherkey].pop()
-					propdict[key].append(transfer)
+				else:
+					del propdict[key][i]
+					transfer = next(iter(propdict[otherkey]))
+					propdict[key][transfer] = True
+					del propdict[otherkey][transfer]
 					if len(propdict[otherkey]) == 0:
 						del propdict[otherkey]
 				break
@@ -83,5 +82,4 @@ while True:
 		
 	keylist = list(propdict.keys())
 
-print(propdict)
 print(1 if len(propdict) else 0)
