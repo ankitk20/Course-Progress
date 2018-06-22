@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-with open('2sat2.txt', 'r') as file:
+with open('test.txt', 'r') as file:
     f = file.readlines()
 
 f.pop(0)
