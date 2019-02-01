@@ -1,0 +1,41 @@
+[
+  {
+    "op": "core/text-transform",
+    "description": "To Date 'yyyyMMdd' [CONTRACT_DATE] (#### Rows)",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "columnName": "CONTRACT_DATE",
+    "expression": "grel:toDate(value, 'yyyyMMdd')",
+    "onError": "set-to-blank",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "To Date 'yyyyMMdd' [DATE_PROMISED] (#### Rows)",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "columnName": "DATE_PROMISED",
+    "expression": "grel:toDate(value, 'yyyyMMdd')",
+    "onError": "set-to-blank",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "To Date 'yyyyMMdd' [DATE_SHIP_BY] (#### Rows)",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "columnName": "DATE_SHIP_BY",
+    "expression": "grel:toDate(value, 'yyyyMMdd')",
+    "onError": "set-to-blank",
+    "repeat": false,
+    "repeatCount": 10
+  }
+]
